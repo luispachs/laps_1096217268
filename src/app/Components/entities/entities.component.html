@@ -1,0 +1,30 @@
+<section  [ngClass]="'entities-pop-up '+ hide" >
+  <div [ngClass]="'alert '+alertState" *ngFor="let message of messageList">
+      <div [ngClass]="message.type">{{message.message}}</div>
+  </div>
+  <form action="{{route}}" method="{{method}}" (submit)="onSubmit($event)">
+      <article>
+          <label for="name">Nombre</label>
+          <input id="name" type="text" name="name" value="{{name}}" (change)="onchange($event)"/>
+      </article>
+    <article>
+      <label for="nit">NIT</label>
+      <input id="nit" type="text" name="nit" value="{{nit}}" (change)="onchange($event)" />
+    </article>
+    <article>
+      <label for="address">Dirección</label>
+      <input id="address" type="text" name="address" value="{{address}}" (change)="onchange($event)"/>
+    </article>
+    <article>
+      <label for="phone">Telefono</label>
+      <input id="phone" type="text" name="phone" value="{{phone}}" (change)="onchange($event)"/>
+    </article>
+    <article>
+      <label for="email">Email</label>
+      <input id="email" type="text" name="email" value="{{email}}" (change)="onchange($event)"/>
+    </article>
+    <article>
+      <button type="submit" [disabled]="isDisable">{{labelButton}}</button>
+    </article>
+  </form>
+</section>

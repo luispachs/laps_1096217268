@@ -1,24 +1,26 @@
 <!-- @for(entidad of entidadesService.entidades(); track entidad.id){
     {{entidad.nombre}}
 } -->
+<app-entities [route]="actionRoute" [method]="actionMethod" [hide]="hide" [labelButton]="labelButton"></app-entities>
+<app-contacts [route]="actionRoute" [method]="actionContactRoute" [hide]="hideContact" [labelButton]="labelButton"></app-contacts>
 <p-card header="Entidades">
 
     <p-toast />
     <p-toolbar styleClass="mb-4 gap-2">
         <ng-template pTemplate="left">
-            <p-button 
-                severity="success" 
-                label="Nueva" 
-                icon="pi pi-plus" 
-                class="mr-2" 
+            <p-button
+                severity="success"
+                label="Nueva"
+                icon="pi pi-plus"
+                class="mr-2"
                 (onClick)="openNew()" />
-            <p-button 
-                severity="danger" 
-                label="Eliminar" 
-                icon="pi pi-trash" badge="{{selectedEntidades.length}}" 
+            <p-button
+                severity="danger"
+                label="Eliminar"
+                icon="pi pi-trash" badge="{{selectedEntidades.length}}"
                 />
         </ng-template>
-    
+
         <ng-template pTemplate="right">
         </ng-template>
     </p-toolbar>
@@ -34,16 +36,16 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [showCurrentPageReport]="true"
         [loading]="entidadesService.loading()"
-        [(selection)]="selectedEntidades" 
+        [(selection)]="selectedEntidades"
     >
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Lista de entidades</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input 
-                        pInputText 
-                        type="text" 
+                    <input
+                        pInputText
+                        type="text"
                         class="fietext-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-fullld"
                         placeholder="Search..." />
                 </span>
@@ -77,40 +79,41 @@
                     <p-tableCheckbox [value]="entidad" />
                 </td>
                 <td>
-                    {{ entidad.nombre }}
+                    {{ entidad.name }}
                 </td>
                 <td>
                     {{ entidad.nit }}
                 </td>
                 <td>
-                    {{ entidad.telefono }}
+                    {{ entidad.phone }}
                 </td>
                 <td>
-                    {{ entidad.direccion }}
+                    {{ entidad.address }}
                 </td>
                 <td>
-                    <p-button 
-                     
-                        icon="pi pi-pencil" 
-                        class="mr-2" 
-                        [rounded]="true" 
-                        [outlined]="true" 
-                        severity="success" 
+                    <p-button
+
+                        icon="pi pi-pencil"
+                        class="mr-2"
+                        [rounded]="true"
+                        [outlined]="true"
+                        severity="success"
                         (onClick)="edit(entidad)" />
-                    <p-button 
-                     
-                        icon="pi pi-trash" 
-                        class="mr-2" 
-                        severity="danger" 
-                        [rounded]="true" 
-                        [outlined]="true" 
+                    <p-button
+
+                        icon="pi pi-trash"
+                        class="mr-2"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
                         (onClick)="entidadesService.delete(entidad)" />
-                    <p-button 
-                     
-                        icon="pi pi-users" 
-                        severity="info" 
-                        [rounded]="true" 
-                        [outlined]="true" 
+                    <p-button
+
+                        icon="pi pi-users"
+                        severity="info"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (onClick)="openContact()"
                         />
 
                 </td>
