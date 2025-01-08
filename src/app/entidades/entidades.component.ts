@@ -38,6 +38,7 @@ export default class EntidadesComponent {
   actionMethod = "POST";
   hide:string = "hide";
   hideContact:string = "hide";
+  contactEntity:Entidad|null = null;
   labelButton:string ="";
 
   entitiesSignal:Signal<EntitiesComponent>= viewChild.required(EntitiesComponent);
@@ -60,10 +61,11 @@ export default class EntidadesComponent {
       }
   }
 
-  openContact() {
+  openContact(entidad:Entidad) {
     if(this.hideContact === "hide"){
       this.labelButton = "Crear";
       this.hideContact = "";
+      this.contactEntity = entidad;
 
     }else{
       this.hideContact="hide"
@@ -71,7 +73,15 @@ export default class EntidadesComponent {
   }
 
   edit(entidad:Entidad){
+    if(this.hideContact === "hide"){
+      this.labelButton = "Crear";
+      this.hideContact = "";
+      this.contactEntity = entidad;
+      this.actionRoute ="/entities/"+entidad.id;
 
+    }else{
+      this.hideContact="hide"
+    }
   }
 
 }

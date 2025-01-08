@@ -6,6 +6,7 @@ import {enviroment} from "../../../enviroment";
 import FormMessageInterface from "../../../Interface/FormErrorInterface";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, throwError} from "rxjs";
+import {Entidad} from "../../entidades/interfaces/entidad";
 
 // @ts-ignore
 @Component({
@@ -21,10 +22,10 @@ export class EntitiesComponent {
   @Input({required: true}) route = "";
   @Input({required: true}) method = "";
   @Input({required:true}) labelButton ="";
+  @Input() entity:Entidad|null = null;
   env:EnvInterface = enviroment();
   @Input({required:true}) hide:string="";
   @Output() hideChange = new EventEmitter();
-
   #formMessage:FormMessageInterface= {message:"",type:""};
   alertState = this.#formMessage.type + "hide";
   messageList:Array<FormMessageInterface> = [];
@@ -36,7 +37,13 @@ export class EntitiesComponent {
   isDisable =false;
 
   constructor(private http:HttpClient) {
-
+      if(this.entity!=null){
+        this.#name = this.entity.name;
+          this.#address = this.entity.address;
+          this.#phone = this.entity.phone;
+          this.#email = this.entity.email;
+          this.#nit = this.entity.nit;
+      }
 
   }
 

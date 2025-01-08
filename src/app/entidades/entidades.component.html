@@ -1,8 +1,8 @@
 <!-- @for(entidad of entidadesService.entidades(); track entidad.id){
     {{entidad.nombre}}
 } -->
-<app-entities [route]="actionRoute" [method]="actionMethod" [hide]="hide" [labelButton]="labelButton"></app-entities>
-<app-contacts [route]="actionRoute" [method]="actionContactRoute" [hide]="hideContact" [labelButton]="labelButton"></app-contacts>
+<app-entities [route]="actionRoute" [method]="actionMethod" [hide]="hide" [labelButton]="labelButton" [entity]="contactEntity"></app-entities>
+<app-contacts [route]="actionContactRoute" [method]="actionMethod" [hide]="hideContact" [labelButton]="labelButton" [entity]="contactEntity"></app-contacts>
 <p-card header="Entidades">
 
     <p-toast />
@@ -113,7 +113,7 @@
                         severity="info"
                         [rounded]="true"
                         [outlined]="true"
-                        (onClick)="openContact()"
+                        (onClick)="openContact(entidad)"
                         />
 
                 </td>

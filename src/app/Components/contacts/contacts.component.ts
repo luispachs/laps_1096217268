@@ -5,8 +5,7 @@ import FormMessageInterface from "../../../Interface/FormErrorInterface";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, throwError} from "rxjs";
 import {NgClass,NgForOf,NgIf} from "@angular/common";
-import {ContactService} from "../../services/contact.service";
-import {EntidadesService} from "../../entidades/services/entidades.service";
+import {Entidad} from "../../entidades/interfaces/entidad";
 
 @Component({
   selector: 'app-contacts',
@@ -15,7 +14,7 @@ import {EntidadesService} from "../../entidades/services/entidades.service";
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.css'
 })
-export class ContactsComponent  implements  OnInit {
+export class ContactsComponent  {
   @Input({required: true}) route = "";
   @Input({required: true}) method = "";
   @Input({required:true}) labelButton ="";
@@ -29,16 +28,13 @@ export class ContactsComponent  implements  OnInit {
   #name ="";
   #phone="";
   #email="";
-  #entity=""
+  @Input({required:true}) entity:Entidad|null=null;
   isDisable =false;
-  entities:any = []
 
-  constructor(private http:HttpClient,private entitiesService:EntidadesService) {
+
+  constructor(private http:HttpClient) {
   }
 
-  ngOnInit() {
-    this.entities = this.entitiesService.entidades;
-  }
 
   get name(){
     return this.#name;
@@ -49,9 +45,7 @@ export class ContactsComponent  implements  OnInit {
   get email(){
     return this.#email ;
   }
-  get entity(){
-    return this.#entity;
-  }
+
 
 
 
@@ -65,9 +59,6 @@ export class ContactsComponent  implements  OnInit {
         this.#email = target.value;
         break;
 
-      case "entity":
-        this.#entity = target.value;
-        break;
 
       case "name":
         this.#name = target.value;
@@ -90,7 +81,7 @@ export class ContactsComponent  implements  OnInit {
 
       this.alertState = "";
     }
-    if (this.#entity == null ) {
+    if (this.entity == null ) {
       let message: FormMessageInterface = {
         message: "El valor de Entidad es requerido",
         type: "error"
@@ -129,7 +120,7 @@ export class ContactsComponent  implements  OnInit {
         },
         body: JSON.stringify({
           "name": this.#name,
-          "entity": this.#entity,
+          "entity_id": this.entity?.id,
           "phone": this.#phone,
           "email": this.#email
         }),

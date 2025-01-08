@@ -1,9 +1,9 @@
 export interface Entidad {
     id:         number;
-    nombre:     string;
+    name:     string;
     nit:        string;
-    direccion:  string;
-    telefono:   string;
+    address:  string;
+    phone:   string;
     email:      string;
     updated_at?: Date;
     created_at?: Date;
