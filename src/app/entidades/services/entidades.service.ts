@@ -39,7 +39,7 @@ export class EntidadesService {
     });
   }
   delete(entidad: Entidad): void {
-    this.http.delete<Entidad>(`${this.url}entidades/${entidad.id}`).subscribe({
+    this.http.delete<Entidad>(`${this.url}/${entidad.id}`).subscribe({
       next: (res) => {
         this.refresh();
       },
@@ -47,5 +47,28 @@ export class EntidadesService {
         console.error('Error al eliminar la entidad:', error);
       }
     });
+  }
+
+  deleteMuch(entities:Entidad[]){
+
+    let entitiesId:number[] = entities.map(elem=>elem.id);
+    console.log([entities,entitiesId]);
+    this.http.delete(this.url,{
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({entities: entitiesId})
+    }).subscribe({
+      next: (res) => {
+      },
+      error: (error) => {
+        throw new Error(error.message);
+      },
+      complete: () => {
+        this.refresh();
+      }
+    });
+
+    return 0;
   }
 }

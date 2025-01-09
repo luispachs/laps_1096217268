@@ -126,10 +126,8 @@ export class ContactsComponent  {
         }),
       }
     ).pipe( catchError(this.catchErrorEntities)).subscribe(async response => {
-      this.messageList=[{message:"Entidad creada",type:"successfull"}];
       this.hide = "hide";
       this.hideChange.emit(true);
-      this.alertState ="";
     });
 
   }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {MessageService} from "primeng/api";
 import {EnvInterface} from "../../../Interface/EnvInterface";
@@ -7,12 +7,13 @@ import FormMessageInterface from "../../../Interface/FormErrorInterface";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, throwError} from "rxjs";
 import {Entidad} from "../../entidades/interfaces/entidad";
+import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 
 // @ts-ignore
 @Component({
   selector: 'app-entities',
   standalone: true,
-  imports: [NgClass, NgForOf, NgIf],
+  imports: [NgClass, NgForOf, NgIf, ReactiveFormsModule],
   templateUrl: './entities.component.html',
   styleUrl: './entities.component.css'
 })
@@ -36,17 +37,27 @@ export class EntitiesComponent {
   #nit=""
   isDisable =false;
 
+  form = new FormGroup({
+    name: new FormControl(this.#name,),
+    nit: new FormControl(this.#nit),
+    address: new FormControl(this.#address),
+    phone: new FormControl(this.#phone),
+    email: new FormControl(this.#email),
+  })
+
   constructor(private http:HttpClient) {
-      if(this.entity!=null){
-        this.#name = this.entity.name;
-          this.#address = this.entity.address;
-          this.#phone = this.entity.phone;
-          this.#email = this.entity.email;
-          this.#nit = this.entity.nit;
-      }
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.entity!=null){
+      this.#name = this.entity.name;
+      this.#address = this.entity.address??"";
+      this.#phone = this.entity.phone??"";
+      this.#email = this.entity.email??"";
+      this.#nit = this.entity.nit;
+    }
+  }
   get name(){
     return this.#name;
   }
@@ -65,45 +76,17 @@ export class EntitiesComponent {
 
 
 
-  onchange(e:Event){
-    let target = e.target as HTMLInputElement;
-    switch (target.name) {
-      case "phone":
-        this.#phone = target.value;
-        break;
-      case "email":
-          this.#email = target.value;
-          break;
-
-      case "nit":
-            this.#nit = target.value;
-            break;
-
-      case "address":
-              this.#address = target.value;
-              break;
-      case "name":
-        this.#name = target.value;
-        break;
-
-        default:
-          throw new Error("Invalid Option");
-
-    }
-  }
-
-
 onSubmit(e:Event) {
   e.preventDefault();
   this.messageList =[];
   let regexp = new RegExp(/^(?=.{1,64})[a-za-z0-9!#$%&'+/=?^_{|}~-]+(?:\.[a-za-z0-9!#$%&'*+/=?^\_\{|}~-]+)@a-za-z0-9?(?:.a-za-z0-9?)$/);
-  if (!regexp.test(this.#email) && this.#email.length > 191) {
+  if (!regexp.test(this.form.value.email!) && this.form.value.email!.length > 191) {
     let message: FormMessageInterface = {message: "el valor de email no es valido", type: "error"};
     this.messageList.push(message)
 
     this.alertState = "";
   }
-  if (this.#nit == "" || this.#nit.length > 191) {
+  if (this.form.value.nit == "" || this.form.value.nit!.length > 191) {
     let message: FormMessageInterface = {
       message: "El valor de NIT excede el numero de caracteres permitidos",
       type: "error"
@@ -111,7 +94,7 @@ onSubmit(e:Event) {
     this.messageList.push(message)
   }
 
-  if (this.#name == "" || this.#name.length > 191) {
+  if (this.form.value.name == "" || this.form.value.name!.length > 191) {
     let message: FormMessageInterface = {
       message: "El valor de nombre excede el numero de caracteres permitidos",
       type: "error"
@@ -119,7 +102,7 @@ onSubmit(e:Event) {
     this.messageList.push(message)
   }
 
-  if (this.#address.length > 191) {
+  if (this.form.value.address!.length > 191) {
     let message: FormMessageInterface = {message: "el valor de Dirección no es valido", type: "error"};
 
     this.messageList.push(message)
@@ -150,18 +133,20 @@ onSubmit(e:Event) {
         'Content-type':"Application/json",
       },
       body: JSON.stringify({
-        "name": this.#name,
-        "nit": this.#nit,
-        "address": this.#address,
-        "phone": this.#phone,
-        "email": this.#email
+        "name": this.form.value.name,
+        "nit": this.form.value.nit,
+        "address": this.form.value.address,
+        "phone": this.form.value.phone,
+        "email": this.form.value.email
       }),
     }
   ).pipe( catchError(this.catchErrorEntities)).subscribe(async response => {
-      this.messageList=[{message:"Entidad creada",type:"successfull"}];
+
       this.hide = "hide";
       this.hideChange.emit(true);
       this.alertState ="";
+      this.entity = null;
+
   });
 
 }

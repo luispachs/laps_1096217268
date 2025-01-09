@@ -11,6 +11,7 @@ import { MessageService } from 'primeng/api';
 import {EntitiesComponent} from "../Components/entities/entities.component";
 import {SIGNAL} from "@angular/core/primitives/signals";
 import {ContactsComponent} from "../Components/contacts/contacts.component";
+import {TableRowSelectEvent,TableRowUnSelectEvent} from "primeng/table";
 
 @Component({
   selector: 'app-entidades',
@@ -23,7 +24,7 @@ import {ContactsComponent} from "../Components/contacts/contacts.component";
     ToastModule,
     ToolbarModule,
     EntitiesComponent,
-    ContactsComponent
+    ContactsComponent,
   ],
   templateUrl: './entidades.component.html',
   styleUrl: './entidades.component.css',
@@ -47,17 +48,19 @@ export default class EntidadesComponent {
   constructor(){
     effect(() => {
       this.entitiesSignal().hideChange.subscribe((e:Event)=>{
+        this.contactEntity =null;
         this.entidadesService.refresh();
       });
     });
   }
   openNew() {
-      if(this.hide === "hide"){
+    this.contactEntity =null;
+      if(this.hide ==="hide"){
         this.labelButton = "Crear";
         this.hide = "";
 
       }else{
-        this.hide="hide"
+        this.hide="hide";
       }
   }
 
@@ -66,22 +69,27 @@ export default class EntidadesComponent {
       this.labelButton = "Crear";
       this.hideContact = "";
       this.contactEntity = entidad;
-
+      this.actionMethod="POST";
     }else{
-      this.hideContact="hide"
+      this.hideContact="hide";
+
     }
   }
 
   edit(entidad:Entidad){
-    if(this.hideContact === "hide"){
-      this.labelButton = "Crear";
-      this.hideContact = "";
+    if(this.hide === "hide"){
+      this.labelButton = "Editar";
+      this.hide = "";
       this.contactEntity = entidad;
-      this.actionRoute ="/entities/"+entidad.id;
-
+      this.actionRoute ="/api/entities/"+entidad.id;
+      this.actionMethod="PUT";
     }else{
-      this.hideContact="hide"
+      this.hide="hide"
     }
   }
 
+  onDestroy(){
+    this.entidadesService.deleteMuch(this.selectedEntidades);
+    this.selectedEntidades =[];
+  }
 }
